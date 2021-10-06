@@ -9,6 +9,7 @@ require('dotenv').config();
 
 //Routes
 const authRouter = require('./routes/auth.routes');
+const userRouter = require('./routes/user.routes');
 
 const PORT = process.env.PORT;
 const app = express();
@@ -18,6 +19,8 @@ app.use(express.json())
 dbConfig();
 
 app.use('/api/auth',authRouter);
+
+app.use('/api/user',userRouter);
 
 //Socket.Io Connection//
 

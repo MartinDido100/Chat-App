@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { getUser,getFriends,addFriend,deleteFriend } = require('../controllers/user.controllers');
 
 const router = Router();
 
@@ -6,6 +7,11 @@ const router = Router();
 router.get('/get/:username',getUser);
 
 //Obtener Amigos
-router.get('/:userId',getFriends);
+router.get('/getFriends/:userId',getFriends);
 
-router.post('/addFriend',addFriend);
+router.put('/addFriend',addFriend);
+
+router.put('/deleteFriend',deleteFriend);
+
+
+module.exports = router
