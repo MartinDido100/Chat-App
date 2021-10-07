@@ -32,6 +32,31 @@ const getUser = async (req = request , res = response) =>{
 
 }
 
+const getUsersList = async (req,res=response) => {
+    const { query } = req.params
+
+    try {
+        
+        const usersList = await Usuario.find({},'username');
+
+        const filteredUsers = usersList.filter(user => {
+            return user.username.toLowerCase().includes(query.toLowerCase())
+        })
+
+        return res.status(200).json({
+            ok: true,
+            usuarios: filteredUsers
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error de servidor'
+        })
+    }
+}
+
 const getFriends = async (req, res = response) => {
 
     const { userId } = req.params;
@@ -186,5 +211,6 @@ module.exports = {
     getUser,
     getFriends,
     addFriend,
+    getUsersList,
     deleteFriend
 }
