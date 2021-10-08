@@ -9,10 +9,15 @@ const chatSchema = new Schema({
         min:1,
         required: true
     }],
-    mensajes: [{
+    messages: [{
         type: Schema.Types.ObjectId,
-        ref: 'mensajes'
+        ref: 'mensajes',
+        default: []
     }]
+},{
+    skipVersioning: true,
+    timestamps: true,
+    versionKey: false
 });
 
 
