@@ -43,7 +43,7 @@ const obtenerChat = async (req,res = response) => {
 
     try {
         
-        const dbChat = await Chat.findOne({ miembros: { $all: [ miembro1,miembro2 ] } })
+        const dbChat = await Chat.findOne({ miembros: { $all: [ miembro1,miembro2 ] } }) //TODO:HACER Populate de mensajes
 
         if(!dbChat){
             return res.status(404).json({
