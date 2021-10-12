@@ -5,7 +5,7 @@ const validarJwt = async (req,res = response,next) =>{
 
     const token = req.header('autorizathion');
 
-    if(!token || !token.startsWith('bearer ')){
+    if(!token || !token.startsWith('Bearer ')){
         return res.status(401).json({
             ok: false,
             msg: 'Error de autenticacion'
