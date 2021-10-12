@@ -43,7 +43,7 @@ const obtenerChat = async (req,res = response) => {
 
     try {
         
-        const dbChat = await Chat.findOne({ miembros: { $all: [ miembro1,miembro2 ] } }) //TODO:HACER Populate de mensajes
+        const dbChat = await Chat.findOne({ miembros: { $all: [ miembro1,miembro2 ] } }).populate('messages') //TODO:HACER Populate de mensajes
 
         if(!dbChat){
             return res.status(404).json({
@@ -74,11 +74,9 @@ const agregarMensaje = async (req,res = response) => {
 
     try {
         
-        const dbChat = await Chat.findByIdAndUpdate({miembros: { $all: [miembro1,miembro2] }},{
-            mensajes:{
-                $push : {
-                    idMensaje
-                }
+        const dbChat = await Chat.findOneAndUpdate({miembros: { $all: [miembro1,miembro2] }},{
+            $addToSet:{
+                messages: idMensaje
             }
         },{new:true})
 
@@ -96,9 +94,9 @@ const agregarMensaje = async (req,res = response) => {
 
     } catch (error) {
         console.log(error);
-        return res.status(200).json({
+        return res.status(500).json({
             ok: false,
-            msg: 'Error de servido'
+            msg: 'Error de servidor'
         })
     }
 

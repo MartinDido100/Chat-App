@@ -6,18 +6,22 @@ const mensajeSchema = new Schema({
         type: String,
         required: true
     },
-    conversation: {
+    conversacion: {
         type: Schema.Types.ObjectId,
         ref: 'chats'
     },
-    sender:{
+    enviadoPor:{
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
     },
-    reciver:{
+    recibidoPor:{
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
     }
+},{
+    timestamps: true,
+    skipVersioning: true,
+    versionKey:false
 });
 
 

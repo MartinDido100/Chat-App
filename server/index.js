@@ -8,9 +8,10 @@ require('dotenv').config();
 
 
 //Routes
-const authRouter = require('./routes/auth.routes');
-const userRouter = require('./routes/user.routes');
+const authRoutes = require('./routes/auth.routes');
+const userRoutes = require('./routes/user.routes');
 const chatRoutes = require('./routes/chat.routes');
+const msgRoutes = require('./routes/msg.routes')
 
 const PORT = process.env.PORT;
 const app = express();
@@ -19,9 +20,10 @@ app.use(express.json())
 
 dbConfig();
 
-app.use('/api/auth',authRouter);
-app.use('/api/user',userRouter);
+app.use('/api/auth',authRoutes);
+app.use('/api/user',userRoutes);
 app.use('/api/chat',chatRoutes);
+app.use('/api/msg',msgRoutes);
 
 //Socket.Io Connection//
 
