@@ -1,10 +1,80 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { AuthResponse, Usuario } from '../interfaces/auth.interfaces';
+import { catchError, map, tap } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private socket: Socket) { }
+  baseUrl: string = environment.baseUrl
+  private usuario!: Usuario
+
+  constructor(private http: HttpClient,private cS: CookieService) { }
+
+  get user():Usuario{
+    return {...this.usuario}
+  }
+
+
+  login(username: string,password: string){
+
+    const url: string = `${this.baseUrl}/auth/login`;
+    const body = {username,password}
+
+    return this.http.post<AuthResponse>(url,body).pipe(
+      tap(resp =>{
+        if(resp.ok){
+          this.cS.set('token',resp.token!)
+        }
+      }),
+      map(resp => {
+        return resp.ok
+      })
+    )
+
+  }
+
+  register(username: string,email:string,password: string){
+
+    const url: string = `${this.baseUrl}/auth/register`;
+    const body = {username,email,password}
+
+    return this.http.post<AuthResponse>(url,body).pipe(
+      tap(resp =>{
+        if(resp.ok){
+          this.cS.set('token',resp.token!)
+        }
+      }),
+      map(resp => {
+        return resp.ok
+      })
+    )
+
+  }
+
+  cargarUsuario(resp: AuthResponse){
+    this.usuario = {
+      username: resp.username!,
+      email: resp.email,
+      userId: resp.userId!
+    }
+  }
+
+  verifyToken(){
+    const url = `${this.baseUrl}/auth/verify`
+    return this.http.get<AuthResponse>(url).pipe(
+      map(resp => {
+        this.cargarUsuario(resp);
+        return resp.ok
+      }),
+      catchError(()=> of(false))
+    )
+  }
+
 }

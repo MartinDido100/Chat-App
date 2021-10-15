@@ -1,0 +1,33 @@
+<section class="auth-layout">
+    <div class="presentation">
+        <h1>Simple Friends and Chat App</h1>
+        <div class="icons-cont">
+            <div class="single-icon-cont">
+                <p class="presentation-p">Add friends</p>
+                <div class="icon"><i class="fas fa-user-friends"></i></div>
+            </div>
+            <div class="single-icon-cont">
+                <p class="presentation-p">Chat with them</p>
+                <div class="icon"><i class="fas fa-comments"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="form-container">
+        <h3>{{ messagesByUrl.title }}</h3>
+        <div class="google-button">
+            <img src="../../../../assets/images/Google Logo.png" alt="Google - Logo">
+            <p>Continue with google</p>
+        </div>
+        <div class="lines-cont">
+            <div class="line"></div>
+            <p>{{ messagesByUrl.linesMsg }}</p>
+            <div class="line"></div>
+        </div>
+        <div class="cont">
+            <router-outlet></router-outlet> 
+        </div>
+        <div class="qs-cont">
+            <p class="qs"> {{ messagesByUrl.qsMsg }} <span class="link"><a [routerLink]="messagesByUrl.qsRoute"> {{ messagesByUrl.qsLink }} </a></span></p>
+        </div>
+    </div>
+</section>

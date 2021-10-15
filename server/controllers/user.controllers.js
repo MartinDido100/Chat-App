@@ -19,7 +19,7 @@ const getUser = async (req = request , res = response) =>{
         return res.status(200).json({
             ok: true,
             username: dbUser.username,
-            _id: dbUser._id
+            userId: dbUser._id
         })
 
     } catch (error) {
@@ -74,7 +74,7 @@ const getFriends = async (req, res = response) => {
 
         const friendsArray = dbUser.friends.map( friend => {
             return {
-                _id: friend._id,
+                userId: friend._id,
                 username: friend.username
             }
         })
@@ -131,7 +131,7 @@ const addFriend = async (req, res = response) => {
 
         const friendsArray = dbUser.friends.map( friend => {
             return {
-                _id: friend._id,
+                userId: friend._id,
                 username: friend.username
             }
         })
@@ -188,7 +188,7 @@ const deleteFriend = async (req,res = response) => {
 
         const friendsArray = dbUser.friends.map( friend => {
             return {
-                _id: friend._id,
+                userId: friend._id,
                 username: friend.username
             }
         })
