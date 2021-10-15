@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+@import './assets/styles/resets', url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap');
+
+:root{
+    --primary: #4c70ff
+}
+
+*{
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}

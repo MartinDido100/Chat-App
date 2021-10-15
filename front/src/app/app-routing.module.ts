@@ -4,11 +4,17 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path:'auth',
-    loadChildren: ()=>import('./auth/auth.module').then(m => m.AuthModule)
+    loadChildren: ()=>import('./auth/auth.module').then(m => m.AuthModule),
+    data:{
+      title: 'Login'
+    }
   },
   {
     path:'homepage',
-    loadChildren: ()=>import('./chat/chat.module').then(m => m.ChatModule)
+    loadChildren: ()=>import('./chat/chat.module').then(m => m.ChatModule),
+    data:{
+      title: 'Homepage'
+    }
   },
   {
     path:'**',
