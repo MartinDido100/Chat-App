@@ -1,17 +1,17 @@
-<form class="form" autocomplete="off" [formGroup]="registerForm">
+<form class="form" autocomplete="off" [formGroup]="registerForm" (ngSubmit)="register()">
 
     <div class="form-field">
     
         <label for="username">Username*</label>
         <input type="text" placeholder="Username" id="username" formControlName="username">
-        
+        <div class="formerror-cont" *ngIf="validateField('username','required') && submited"><p class="formerror-msg">Campo obligatorio</p></div>
     </div>
 
     <div class="form-field">
     
         <label for="email">Email*</label>
         <input type="email" placeholder="example@example.com" id="email" formControlName="email">
-        
+        <div class="formerror-cont" *ngIf="validateField('email','required') && submited"><p class="formerror-msg">Campo obligatorio</p></div>
     </div>
 
 
@@ -19,16 +19,17 @@
     
         <label for="password">Password*</label>
         <input type="password" placeholder="Password" id="password" formControlName="password">
-    
+        <div class="formerror-cont" *ngIf="validateField('password','required') && submited"><p class="formerror-msg">Campo obligatorio</p></div>
     </div>
 
     <div class="form-field">
     
         <label for="confirm">Confrim password*</label>
         <input type="password" id="confirm" formControlName="confirmP">
-    
+        <div class="formerror-cont" *ngIf="validateField('confirmP','noIguales') && submited"><p class="formerror-msg">Las contraseñas no coinciden</p></div>
+        <div class="error-cont" *ngIf="registerError"><p class="error-msg">{{registerError}}</p></div>
     </div>
 
-    <button type="submit">Register</button>
+    <button type="submit" *ngIf="!cargando"> <div class="spinner" *ngIf="cargando"></div> {{ registerText }} </button>
 
 </form>

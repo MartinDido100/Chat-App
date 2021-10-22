@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -12,6 +13,8 @@ const routes: Routes = [
   {
     path:'homepage',
     loadChildren: ()=>import('./chat/chat.module').then(m => m.ChatModule),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
     data:{
       title: 'Homepage'
     }

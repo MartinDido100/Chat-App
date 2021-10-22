@@ -13,7 +13,10 @@ import { ValidationsService } from '../../services/validations.service';
 export class LoginComponent implements OnInit {
 
   loginError: string = '';
+  loginText: string = 'Login'
   submited: boolean = false;
+  cargando: boolean = false;
+
   loginForm: FormGroup = this.fB.group({
     username: ['',[Validators.required,Validators.min(3)]],
     password: ['',[Validators.required,Validators.min(6)]]
@@ -35,6 +38,9 @@ export class LoginComponent implements OnInit {
       this.loginForm.markAllAsTouched();
       return;
     }
+
+    this.loginText = '';
+    this.cargando = true;
 
     const { username,password } = this.loginForm.value;
 

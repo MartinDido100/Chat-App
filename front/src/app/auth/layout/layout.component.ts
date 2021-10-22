@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Router, Event, NavigationStart, NavigationEnd } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from '../services/auth.service';
 
 interface messages{
   title: string,
@@ -19,7 +20,7 @@ export class LayoutComponent implements OnInit {
 
   messagesByUrl!: messages
 
-  constructor(private router: Router,private cS: CookieService) {
+  constructor(private router: Router,private cS: CookieService,private aS: AuthService) {
     router.events.subscribe((event: Event) => {
       if(event instanceof NavigationEnd){
         this.putMessages(event.url)
@@ -30,6 +31,14 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     this.cS.delete('token');
     this.cS.deleteAll('/');
+  }
+
+  async googleLogin(){
+    await (await this.aS.googleLogin()).subscribe(ok =>{
+      if(ok){
+        this.router.navigateByUrl('/homepage')
+      }
+    }, (errr) => console.log)
   }
 
   putMessages(url: string){

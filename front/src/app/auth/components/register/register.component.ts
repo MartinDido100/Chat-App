@@ -1,5 +1,9 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ValidationsService } from '../../services/validations.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -8,16 +12,51 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
 
+  registerError: string = '';
+  submited: boolean = false;
+  cargando: boolean = false;
+  registerText: string = 'Register'
+
+
   registerForm: FormGroup = this.fB.group({
-    username:[],
-    email:[],
-    password:[],
-    confirmP:[]
+    username:['',Validators.required],
+    email:['',[Validators.required,Validators.pattern(this.vS.emailPattern)]],
+    password:['',[Validators.required,Validators.minLength(6)]],
+    confirmP:['',[Validators.required,Validators.minLength(6)]]
+  },{
+    validators: [this.vS.comparePaswords('password','confirmP')]
   })
 
-  constructor(private fB: FormBuilder) { }
+  constructor(private fB: FormBuilder,private vS: ValidationsService,private aS: AuthService,private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  validateField(field: string,error: string){
+    return this.vS.validateField(field,this.registerForm,error);
+  }
+
+  register(){
+    
+    this.submited = true;
+    if(this.registerForm.invalid){
+      this.registerForm.markAllAsTouched();
+      return;
+    }
+
+    this.registerText = '';
+    this.cargando = true
+
+    const { username, email, password } = this.registerForm.value;
+
+    this.aS.register(username,email,password).subscribe((valido: boolean) => {
+
+      if(valido){
+        this.router.navigateByUrl('/homepage');
+      }
+
+    },(error: HttpErrorResponse)=> this.registerError = error.error.msg)
+
   }
 
 }

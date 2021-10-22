@@ -15,7 +15,6 @@ const registerUser = async (req,res = response) => {
         newUser.password = bcrypt.hashSync(password,salt);
 
         const token = await generarJwt(newUser._id,username);
-        console.log(token);
         await newUser.save();
 
         return res.status(200).json({
@@ -80,7 +79,7 @@ const googleLogin = async (req,res=response) => {
 
     try {
         
-        const existingUser = await User.findOne({ email });
+        const existingUser = await Usuario.findOne({ email });
 
         if(!existingUser){
 
