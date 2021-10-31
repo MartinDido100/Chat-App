@@ -15,6 +15,6 @@
         <div class="error-cont" *ngIf="loginError"><p class="error-msg">{{loginError}}</p></div>
     </div>
 
-    <button type="submit"> <div class="spinner" *ngIf="cargando"></div> {{ loginText }} </button>
+    <button type="submit" #button> <div class="spinner" *ngIf="cargando"></div> Login </button>
 
 </form>
