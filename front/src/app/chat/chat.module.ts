@@ -6,6 +6,9 @@ import { LayoutComponent } from './layout/layout.component';
 import { ChatsComponent } from './components/chats/chats.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { ChatSimpleComponent } from './components/chat-simple/chat-simple.component';
+import { SearchComponent } from './components/search/search.component';
+import { TimePipe } from './pipes/time.pipe';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,11 +16,15 @@ import { ChatSimpleComponent } from './components/chat-simple/chat-simple.compon
     LayoutComponent,
     ChatsComponent,
     PerfilComponent,
-    ChatSimpleComponent
+    ChatSimpleComponent,
+    SearchComponent,
+    TimePipe
   ],
   imports: [
     CommonModule,
-    ChatRoutingModule
+    ChatRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class ChatModule { }

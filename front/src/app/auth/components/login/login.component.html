@@ -10,11 +10,14 @@
     <div class="form-field">
     
         <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password" formControlName="password">
+        <div class="password-input">
+            <input [type]="checkInputType()" placeholder="Password" id="password" formControlName="password">
+            <div class="eye-icon"> <i [class]="checkPassView()" (click)="viewPass = !viewPass"></i> </div>
+        </div>
         <div class="formerror-cont" *ngIf="validateField('password','required') && submited"><p class="formerror-msg">Campo obligatorio</p></div>
         <div class="error-cont" *ngIf="loginError"><p class="error-msg">{{loginError}}</p></div>
     </div>
 
-    <button type="submit" #button> <div class="spinner" *ngIf="cargando"></div> Login </button>
+    <button type="submit" #button [class.trans]="googleLoading"> <div class="spinner" *ngIf="cargando || googleLoading"></div> Login </button>
 
 </form>

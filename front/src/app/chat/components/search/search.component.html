@@ -1,0 +1,21 @@
+<div class="search_cont">
+    <h3 class="search_title">Search an username to add as friend or delete it:</h3>
+    <div class="searchbar">
+        <form autocomplete="off">
+            <input type="text" [(ngModel)]="busqueda" (input)="buscar()" name="busquedaUser" placeholder="Search a user..." class="searchbar_input">
+        </form>
+        <div class="suggestions">
+            <ul class="suggestions_ul">
+                <li [class]="getLiClass(suggestion)"
+                    *ngFor="let suggestion of suggestions">
+                    <p>{{ suggestion.username }}</p>
+                    <div class="addFriend" *ngIf="isNotFriend(suggestion.username)"><i class="fas fa-user-plus search-icon" (click)="addFriend(suggestion)"></i></div>
+                    <div class="addFriend" *ngIf="!isNotFriend(suggestion.username)"><i class="fas fa-user-times search-icon" (click)="deleteFriend(suggestion)"></i></div>
+                </li>
+                <li class="suggestions_li" *ngIf="noResults">
+                    <p>No results for {{ busqueda }}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

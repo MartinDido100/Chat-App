@@ -1,1 +1,17 @@
-<p>chat-simple works!</p>
+<div class="simple-chat">
+    <div class="simple-chat-cont">
+        <ul class="messages_ul">
+            <li *ngFor="let message of conversation" [class]="getMsgType(message.enviadoPor)">{{ message.contenido }} <span class="time">{{ message.updatedAt | time }}</span></li>
+        </ul>
+    </div>
+    
+    <div class="text-bar">
+        <form>
+            <input type="text" class="text-input" placeholder="Send a message...">
+            <button type="submit"   ><i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+    <div class="spinner" *ngIf="loading"></div>
+    <div class="bg-spinner" *ngIf="loading"></div>
+</div>
+

@@ -30,6 +30,6 @@
         <div class="error-cont" *ngIf="registerError"><p class="error-msg">{{registerError}}</p></div>
     </div>
 
-    <button type="submit" *ngIf="!cargando"> <div class="spinner" *ngIf="cargando"></div> {{ registerText }} </button>
+    <button type="submit" *ngIf="!cargando" [class.trans]="googleLoading"> <div class="spinner" *ngIf="cargando || googleLoading"></div> {{ registerText }} </button>
 
 </form>

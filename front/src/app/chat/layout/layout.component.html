@@ -1,8 +1,18 @@
 <main class="main">
-    <div class="sidebar">
-        <div class="chats">Chats</div>
-        <div class="profile">Profile</div>
-    </div>
+    <aside class="sidebar">
+        <a class="sidebar-button" [class]="getCssClass('chats')" routerLink="/homepage/chats">
+            <i class="fas fa-comment-alt"></i>
+        </a>
+        <a class="sidebar-button" [class]="getCssClass('search')" routerLink="/homepage/search">
+            <i class="fas fa-search"></i>
+        </a>
+        <a class="sidebar-button" [class]="getCssClass('profile')" routerLink="/homepage/profile">
+            <i class="fas fa-user"></i>
+        </a>
+        <a class="sidebar-button logout" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    </aside>
     <div class="container">
         <router-outlet></router-outlet>
     </div>

@@ -4,6 +4,7 @@ export interface AuthResponse{
     email?: string,
     token?: string,
     userId?: string,
+    friends?: Usuario[],
 }
 
 export interface Usuario{

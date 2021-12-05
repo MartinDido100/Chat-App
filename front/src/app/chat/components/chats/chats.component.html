@@ -1,1 +1,16 @@
-<p>chats works!</p>
+<div class="chats-cont">
+  <div class="chat-select">
+    <div
+      [class]="getCssClass(friend.username)"
+      (click)="chargeClickedFried(friend)"
+      *ngFor="let friend of userFriends; let i = index"
+    >
+      <div class="texts">
+        <p class="chat-name">{{ friend.username }}</p>
+        <p class="chat-latest-message">{{lastMsg[i] || 'Aun no hay mensajes...'}}</p>
+      </div>
+      <div class="chat-messages-number" *ngIf="nuevosMsg">{{ nuevosMsg }}</div>
+    </div>
+  </div>
+  <app-chat-simple *ngIf="chatActivo" [friend]="clickedFriend"></app-chat-simple> 
+</div>

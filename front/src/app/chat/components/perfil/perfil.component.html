@@ -1,1 +1,26 @@
-<p>perfil works!</p>
+<div class="profile-cont">
+
+    <div class="card">  
+
+        <div class="username">
+            <h1>Username: {{user.username | titlecase}}</h1>	
+        </div>
+    
+        <div class="email">
+            <h2>Email: {{user.email}}</h2>
+        </div>
+    
+        <div class="no-friends" *ngIf="friends.length === 0">
+            <h3 class="friends__h3">You don't have any friend</h3>
+        </div>
+
+        <div class="friends" *ngIf="friends.length > 0">
+            <h3 class="friends__h3">Your Friends:</h3>
+                <div *ngFor="let friend of friends" class="friend">
+                    <h3 class="friend__name">{{friend.username}}</h3>
+                </div>
+        </div>
+
+    </div>
+
+</div>

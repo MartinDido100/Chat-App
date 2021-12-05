@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthResponse, Usuario } from '../interfaces/auth.interfaces';
 import { catchError, map, tap } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { GoogleLoginProvider, SocialAuthService, SocialUser } from 'angularx-social-login';
 
 @Injectable({
@@ -21,7 +21,6 @@ export class AuthService {
   get user():Usuario{
     return {...this.usuario}
   }
-
 
   login(username: string,password: string){
 
@@ -40,7 +39,7 @@ export class AuthService {
     )
 
   }
-
+  
   googleLogout(){
     this.socialAuthService.signOut();
   }
