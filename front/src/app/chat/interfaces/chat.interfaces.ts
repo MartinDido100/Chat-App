@@ -24,3 +24,9 @@ export interface UserSearched{
     _id: string,
     username: string;
 }
+
+export interface AddMsgResponse{
+    ok: boolean;
+    msg: string;
+    createdMsg: ChatMessage;
+}

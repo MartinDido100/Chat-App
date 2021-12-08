@@ -21,7 +21,8 @@ const crearMensaje = async (req,res=response) => {
 
         return res.status(200).json({
             ok: true,
-            msg:'Guardado'
+            msg:'Guardado',
+            createdMsg : newMsg,
         })
 
     } catch (error) {

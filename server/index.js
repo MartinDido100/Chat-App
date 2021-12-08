@@ -27,6 +27,12 @@ app.use('/api/msg',msgRoutes);
 
 //Socket.Io Connection//
 
+let connectedUsers = [];
+
+ const getUserToSend = friendId => {
+     return connectedUsers.find(user => user.userId === friendId);
+ }
+
 const server = http.Server(app);
 
 const io = require('socket.io')(server,{//Inicio el socket
@@ -36,10 +42,32 @@ const io = require('socket.io')(server,{//Inicio el socket
 });
 
 io.on('connection',(socket)=> {
-    console.log('User conected')
-    socket.on('prueba',()=>{
-        console.log("Llego la prueba");
+    console.log('User conected',socket.id);
+    socket.on('login',({username,userId}) => {
+        console.log('User logged',username);
+        connectedUsers.push({
+            username,
+            userId,
+            socketId: socket.id
+        });
+    });
+
+    socket.on('disconnect',()=>{
+        console.log('User disconnected',socket.id);
+        connectedUsers = connectedUsers.filter(user => user.socketId !== socket.id);
+    });
+
+    socket.on('sendMessage',({message,friendId})=>{
+        console.log('Mensaje enviado al servidor',message);
+        const userToSend = getUserToSend(friendId);
+        if(userToSend === undefined){
+            io.to(socket.id).emit('messageReceivedOffline',{message});
+        }else{
+            io.to(userToSend.socketId).emit('messageReceived',{message});
+        }
     })
+
+    
 })
 //Socket.Io Connection//
 

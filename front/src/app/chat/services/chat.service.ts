@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { ChatResponse, UserSearchResponse, UserSearched } from '../interfaces/chat.interfaces';
+import { map, switchMap, tap, filter } from 'rxjs/operators';
+import { ChatResponse, UserSearchResponse, UserSearched, AddMsgResponse } from '../interfaces/chat.interfaces';
 import { Usuario } from 'src/app/auth/interfaces/auth.interfaces';
-import { of } from 'rxjs';
 import { AuthResponse } from '../../auth/interfaces/auth.interfaces';
+
+interface LastMessage{
+  message: string;
+  friend: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
+  actualConverId: string = '';
   baseUrl: string = environment.baseUrl;
-  private lastMsgsArray: string[] = [];
+  private lastMsgsArray: LastMessage[] = [];
   private friendsArray: Usuario[] = [];
 
   constructor(private http: HttpClient) { }
@@ -47,7 +52,10 @@ export class ChatService {
     ).subscribe(msgs$ => {
       msgs$.forEach(msgs => {
         if(msgs.length > 0){
-          this.lastMsgsArray.push(msgs[0].contenido);
+          this.lastMsgsArray.push({
+            message: msgs[msgs.length - 1].contenido,
+            friend: msgs[msgs.length - 1].recibidoPor === userId ? msgs[msgs.length - 1].enviadoPor : msgs[msgs.length - 1].recibidoPor
+          });
         }
       })
     })
@@ -56,6 +64,9 @@ export class ChatService {
   getConver(userId: string, friendId: string){
     const url = `${this.baseUrl}/chat/get/chat/${userId}/${friendId}`;
     return this.http.get<ChatResponse>(url).pipe(
+      tap(resp => {
+        this.actualConverId = resp.chatId!;
+      }),
       map(res => {
         return res.mensajes;
       })
@@ -93,6 +104,8 @@ export class ChatService {
 
     this.http.delete(deleteChatUrl, chatBody).subscribe();
 
+    this.lastMsgsArray = this.lastMsgsArray.filter(msg => msg.friend !== friend._id);
+
     return this.http.put<AuthResponse>(url, body).pipe(
       tap(resp => {
         if(resp.ok){
@@ -124,6 +137,37 @@ export class ChatService {
         if(resp.ok){
           this.friendsArray = resp.friends!;
         }
+      })
+    );
+  }
+
+  addMsg(userId: string, friendId: string, msg: string){
+    const url = `${this.baseUrl}/msg/create`;
+
+    const body = {
+      enviadoPor: userId,
+      recibidoPor: friendId,
+      contenido: msg,
+      conversacion: this.actualConverId
+    }
+
+    return this.http.post<AddMsgResponse>(url, body).pipe(
+      tap(resp => {
+        const index = this.lastMsgsArray.findIndex(msg => msg.friend === friendId);
+        const newLMBody = {
+          message: resp.createdMsg.contenido,
+          enviadoPor: resp.createdMsg.enviadoPor,
+          recibidoPor: resp.createdMsg.recibidoPor,
+          friend: resp.createdMsg.recibidoPor === userId ? resp.createdMsg.enviadoPor : resp.createdMsg.recibidoPor
+        }
+        if(index != -1){
+          this.lastMsgsArray[index] = newLMBody;
+        }else{
+          this.lastMsgsArray.push(newLMBody);
+        }
+      }),
+      map(resp => {
+        return resp.createdMsg;
       })
     );
   }

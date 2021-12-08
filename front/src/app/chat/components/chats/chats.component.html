@@ -7,7 +7,7 @@
     >
       <div class="texts">
         <p class="chat-name">{{ friend.username }}</p>
-        <p class="chat-latest-message">{{lastMsg[i] || 'Aun no hay mensajes...'}}</p>
+        <p class="chat-latest-message">{{lastMsg[i]?.message || 'Aun no hay mensajes...'}}</p>
       </div>
       <div class="chat-messages-number" *ngIf="nuevosMsg">{{ nuevosMsg }}</div>
     </div>

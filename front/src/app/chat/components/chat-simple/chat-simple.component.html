@@ -6,9 +6,9 @@
     </div>
     
     <div class="text-bar">
-        <form>
-            <input type="text" class="text-input" placeholder="Send a message...">
-            <button type="submit"   ><i class="fas fa-paper-plane"></i></button>
+        <form (ngSubmit)="sendMsg()" autocomplete="off">
+            <input type="text" class="text-input" placeholder="Send a message..." [(ngModel)]="messageInput" name="messageInput">
+            <button type="submit"><i class="fas fa-paper-plane"></i></button>
         </form>
     </div>
     <div class="spinner" *ngIf="loading"></div>

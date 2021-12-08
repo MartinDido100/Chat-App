@@ -4,6 +4,7 @@ import { ChatService } from '../../services/chat.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ChatMessage } from '../../interfaces/chat.interfaces';
 
+
 @Component({
   selector: 'app-chat-simple',
   templateUrl: './chat-simple.component.html',
@@ -11,6 +12,7 @@ import { ChatMessage } from '../../interfaces/chat.interfaces';
 })
 export class ChatSimpleComponent implements OnInit,OnChanges {
 
+  messageInput: string = '';
   conversation: ChatMessage[] = [];
   loading: boolean = false;
   @Input() friend!: Usuario;
@@ -34,6 +36,14 @@ export class ChatSimpleComponent implements OnInit,OnChanges {
       this.conversation = conver;
       this.loading = false;
     });
+  }
+
+  sendMsg(){
+    if(this.messageInput.length === 0) return;
+    this.cS.addMsg(this.user.userId, this.friend.userId, this.messageInput).subscribe(res=> {
+      this.conversation.push(res);
+    })
+    this.messageInput = '';
   }
 
   ngOnInit(): void {}
