@@ -37,15 +37,23 @@ const getUsersList = async (req,res=response) => {
 
     try {
         
-        const usersList = await Usuario.find({},'username');
+        const usersList = await Usuario.find({});
 
         const filteredUsers = usersList.filter(user => {
             return user.username.toLowerCase().includes(query.toLowerCase())
         })
 
+        const usersArray = filteredUsers.map(user => {
+            return {
+                userId: user._id,
+                username: user.username,
+                newMsgA: user.newMsgA
+            }
+        })
+
         return res.status(200).json({
             ok: true,
-            usuarios: filteredUsers
+            usuarios: usersArray
         })
 
     } catch (error) {
@@ -75,7 +83,8 @@ const getFriends = async (req, res = response) => {
         const friendsArray = dbUser.friends.map( friend => {
             return {
                 userId: friend._id,
-                username: friend.username
+                username: friend.username,
+                newMsgA: friend.newMsgA
             }
         })
 
@@ -112,7 +121,11 @@ const addFriend = async (req, res = response) => {
 
         const dbUser = await Usuario.findByIdAndUpdate(userId,{
             $addToSet: {
-                friends: friend._id
+                friends: friend._id,
+                newMsgA: {
+                    friend: friend._id,
+                    numberOfMsgs: 0
+                }
             }
         },{new:true}).populate('friends');
 
@@ -125,14 +138,19 @@ const addFriend = async (req, res = response) => {
 
         await friend.updateOne({
             $addToSet:{
-                friends: dbUser._id
+                friends: dbUser._id,
+                newMsgA: {
+                    friend: dbUser._id,
+                    numberOfMsgs: 0
+                }
             }
         })
 
         const friendsArray = dbUser.friends.map( friend => {
             return {
                 userId: friend._id,
-                username: friend.username
+                username: friend.username,
+                newMsgA: friend.newMsgA
             }
         })
 
@@ -140,6 +158,105 @@ const addFriend = async (req, res = response) => {
             ok: true,
             friends: friendsArray
         })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok:false,
+            msg:'Error de servidor'
+        })
+    }
+
+}
+
+const updateNewMsgA = async (req,res = response) => {
+
+    const { userId,friendId } = req.body;
+
+    try {
+        
+        const dbUser = await Usuario.findById(userId);
+
+        if(!dbUser){
+            return res.status(404).json({
+                ok: false,
+                msg:'Usuario no encontrado'
+            })
+        }
+
+        const index = dbUser.newMsgA.findIndex(friend => friend.friend == friendId);
+
+        if(index === -1){
+            return res.status(404).json({
+                ok: false,
+                msg:'Amigo no encontrado'
+            })
+        }
+
+        dbUser.newMsgA[index].numberOfMsgs++;
+
+        await dbUser.updateOne({
+            newMsgA: dbUser.newMsgA
+        });
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'Mensaje actualizado'
+        })
+
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok:false,
+            msg:'Error de servidor'
+        })
+    }
+
+}
+
+const resetNewMsgA = async (req,res = response) => {
+
+    const { userId, friendId } = req.body;
+
+    try {
+        
+        const dbUser = await Usuario.findById(userId);
+
+        if(!dbUser){
+            return res.status(404).json({
+                ok: false,
+                msg:'Usuario no encontrado'
+            })
+        }
+
+        const index = dbUser.newMsgA.findIndex(friend => friend.friend == friendId);
+
+        if(index === -1){
+            return res.status(404).json({
+                ok: false,
+                msg:'Amigo no encontrado'
+            })
+        }
+
+        if(dbUser.newMsgA[index].numberOfMsgs === 0){
+            return res.status(200).json({
+                ok: true,
+                msg:'No hay mensajes nuevos'
+            })
+        }
+
+        dbUser.newMsgA[index].numberOfMsgs = 0;
+
+        await dbUser.updateOne({
+            newMsgA: dbUser.newMsgA
+        });
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'Mensaje actualizado'
+        })
+
 
     } catch (error) {
         console.log(error);
@@ -169,7 +286,10 @@ const deleteFriend = async (req,res = response) => {
 
         const dbUser = await Usuario.findByIdAndUpdate(userId,{
             $pull: {
-                friends: friend._id
+                friends: friend._id,
+                newMsgA: {
+                    friend: friend._id
+                }
             }
         },{new:true}).populate('friends');
 
@@ -182,7 +302,10 @@ const deleteFriend = async (req,res = response) => {
 
         await friend.updateOne({
             $pull:{
-                friends: dbUser._id
+                friends: dbUser._id,
+                newMsgA: {
+                    friend: friend._id
+                }
             }
         })
 
@@ -212,5 +335,7 @@ module.exports = {
     getFriends,
     addFriend,
     getUsersList,
-    deleteFriend
+    deleteFriend,
+    updateNewMsgA,
+    resetNewMsgA
 }

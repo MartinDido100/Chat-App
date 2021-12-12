@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { map, switchMap, tap, filter } from 'rxjs/operators';
-import { ChatResponse, UserSearchResponse, UserSearched, AddMsgResponse } from '../interfaces/chat.interfaces';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { ChatResponse, UserSearchResponse, AddMsgResponse, ChatMessage, NuevosMsg } from '../interfaces/chat.interfaces';
 import { Usuario } from 'src/app/auth/interfaces/auth.interfaces';
 import { AuthResponse } from '../../auth/interfaces/auth.interfaces';
 
@@ -20,6 +20,7 @@ export class ChatService {
   baseUrl: string = environment.baseUrl;
   private lastMsgsArray: LastMessage[] = [];
   private friendsArray: Usuario[] = [];
+  private nuevosMsg: NuevosMsg[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -31,12 +32,69 @@ export class ChatService {
     return [...this.friendsArray];
   }
 
+  get nuevosMsgCount(){
+    return [...this.nuevosMsg];
+  }
+
+  logout(){
+    this.friendsArray = [];
+    this.lastMsgsArray = [];
+    this.nuevosMsg = [];
+  }
+
+  updateNuevosMsg(friendId: string){
+    const index = this.nuevosMsg.findIndex(msg => msg.friend === friendId);
+    if(index != -1){
+      this.nuevosMsg[index].nuevosMsg++;
+    }
+  }
+
+  resetNuevosMsg(friendId: string){
+    const index = this.nuevosMsg.findIndex(msg => msg.friend === friendId);
+    if(index != -1){
+      this.nuevosMsg[index].nuevosMsg = 0;
+    }
+  }
+
+  cargarNewMsg(friend: Usuario,userId: string){
+    const index = friend.newMsgA!.findIndex(fr => fr.friend === userId);
+    if(index != -1){
+      this.nuevosMsg.push({
+        friend: friend.userId,
+        nuevosMsg: friend.newMsgA![index].numberOfMsgs
+      });
+    }
+  }
+
+  updateNewMsgOffline(userId: string, friendId: string){
+    const url = `${this.baseUrl}/user/updateNewMsgA`;
+    const body = {
+      userId,
+      friendId
+    }
+    return this.http.put<AuthResponse>(url, body);
+  }
+
+  resetNewMsgOffline(userId: string, friendId: string){
+    const url = `${this.baseUrl}/user/resetNewMsgA`;
+    const body = {
+      userId,
+      friendId
+    }
+    return this.http.put<AuthResponse>(url, body);
+  }
+
   getLastsMsgs(userId: string){
+    this.lastMsgsArray = [];
+    this.nuevosMsg = [];
     const url = `${this.baseUrl}/user/getFriends/${userId}`
     return this.http.get<AuthResponse>(url).pipe(
       switchMap((resp) => {
         if(resp.ok){
           this.friendsArray = resp.friends!;
+          resp.friends!.forEach(friend => {
+            this.cargarNewMsg(friend,userId);
+          })
         }
         const {friends} = resp;
         const requests = friends!.map(friend => {
@@ -86,14 +144,22 @@ export class ChatService {
     );
   }
 
-  deleteFriend(userId: string, friend: UserSearched){
+  updateFriends(friend: Usuario){
+    this.friendsArray.push(friend);
+    this.nuevosMsg.push({
+      friend: friend.userId,
+      nuevosMsg: 0
+    })
+  }
+
+  deleteFriend(userId: string, friend: Usuario){
     const url = `${this.baseUrl}/user/deleteFriend`;
     const deleteChatUrl = `${this.baseUrl}/chat/borrarChat`;
 
     const chatBody = {
       body: {
         miembro1: userId,
-        miembro2: friend._id
+        miembro2: friend.userId
       }
     }
 
@@ -104,7 +170,7 @@ export class ChatService {
 
     this.http.delete(deleteChatUrl, chatBody).subscribe();
 
-    this.lastMsgsArray = this.lastMsgsArray.filter(msg => msg.friend !== friend._id);
+    this.lastMsgsArray = this.lastMsgsArray.filter(msg => msg.friend !== friend.userId);
 
     return this.http.put<AuthResponse>(url, body).pipe(
       tap(resp => {
@@ -115,19 +181,18 @@ export class ChatService {
     );
   }
 
-  addFriend(userId: string, friend: UserSearched){
+  addFriend(userId: string, friend: Usuario){
     const url = `${this.baseUrl}/user/addFriend`;
     const newCharUrl = `${this.baseUrl}/chat/newChat`;
-    const { _id, username } = friend;
 
     const body = {
       userId,
-      friendUsername: username
+      friendUsername: friend.username
     }
 
     const newChatBody = {
       miembro1: userId,
-      miembro2: _id
+      miembro2: friend.userId
     }
 
     this.http.post(newCharUrl, newChatBody).subscribe();  
@@ -140,6 +205,19 @@ export class ChatService {
       })
     );
   }
+
+  updateLastMsg(friendId: string, msg: ChatMessage){
+    const index = this.lastMsgsArray.findIndex(msg => msg.friend === friendId);
+    const newLMBody = {
+      message: msg.contenido,
+      friend: friendId
+    }
+    if(index != -1){
+      this.lastMsgsArray[index] = newLMBody;
+    }else{
+      this.lastMsgsArray.push(newLMBody);
+    }
+  };
 
   addMsg(userId: string, friendId: string, msg: string){
     const url = `${this.baseUrl}/msg/create`;
@@ -156,8 +234,6 @@ export class ChatService {
         const index = this.lastMsgsArray.findIndex(msg => msg.friend === friendId);
         const newLMBody = {
           message: resp.createdMsg.contenido,
-          enviadoPor: resp.createdMsg.enviadoPor,
-          recibidoPor: resp.createdMsg.recibidoPor,
           friend: resp.createdMsg.recibidoPor === userId ? resp.createdMsg.enviadoPor : resp.createdMsg.recibidoPor
         }
         if(index != -1){

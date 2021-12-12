@@ -127,6 +127,7 @@ const verifyToken = async (req,res=response) => {
         username,
         userId: _id,
         email: dbUser.email,
+        newMsgA: dbUser.newMsgA,
         token
     })
 }

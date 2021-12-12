@@ -1,6 +1,17 @@
 const { model,Schema } = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
+const newMsgSchema = new Schema({
+    friend:{
+        type: Schema.Types.ObjectId,
+        ref: 'usuarios',
+    },
+    numberOfMsgs:{
+        type: Number,
+        default: 0
+    }
+})
+
 const userSchema = new Schema({
     username: {
         type: String,
@@ -21,6 +32,10 @@ const userSchema = new Schema({
     friends:[{
         type: Schema.Types.ObjectId,
         ref: 'usuarios',
+        default: []
+    }],
+    newMsgA:[{
+        type: newMsgSchema,
         default: []
     }]
 },{

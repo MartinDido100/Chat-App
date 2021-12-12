@@ -1,3 +1,4 @@
+import { Usuario } from '../../auth/interfaces/auth.interfaces';
 export interface ChatResponse {
     ok: boolean;
     msg?: string;
@@ -17,16 +18,16 @@ export interface ChatMessage {
 
 export interface UserSearchResponse{
     ok: boolean;
-    usuarios: UserSearched[];
-}
-
-export interface UserSearched{
-    _id: string,
-    username: string;
+    usuarios: Usuario[];
 }
 
 export interface AddMsgResponse{
     ok: boolean;
     msg: string;
     createdMsg: ChatMessage;
+}
+
+export interface NuevosMsg {
+    nuevosMsg: number;
+    friend: string;
 }

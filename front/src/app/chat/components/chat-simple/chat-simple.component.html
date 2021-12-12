@@ -1,9 +1,7 @@
 <div class="simple-chat">
-    <div class="simple-chat-cont">
-        <ul class="messages_ul">
-            <li *ngFor="let message of conversation" [class]="getMsgType(message.enviadoPor)">{{ message.contenido }} <span class="time">{{ message.updatedAt | time }}</span></li>
-        </ul>
-    </div>
+    <ul class="messages_ul" #chatBox>
+        <li *ngFor="let message of conversation" [class]="getMsgType(message.enviadoPor)">{{ message.contenido }} <span class="time">{{ message.updatedAt | time }}</span></li>
+    </ul>
     
     <div class="text-bar">
         <form (ngSubmit)="sendMsg()" autocomplete="off">

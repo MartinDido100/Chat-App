@@ -52,22 +52,32 @@ io.on('connection',(socket)=> {
         });
     });
 
-    socket.on('disconnect',()=>{
-        console.log('User disconnected',socket.id);
-        connectedUsers = connectedUsers.filter(user => user.socketId !== socket.id);
+    socket.on('logout',({userToLogout})=>{
+        console.log('User unlogged',userToLogout.username);
+        connectedUsers = connectedUsers.filter(user => user.userId !== userToLogout.userId);
     });
 
-    socket.on('sendMessage',({message,friendId})=>{
-        console.log('Mensaje enviado al servidor',message);
+    socket.on('sendMessage',({message,friendId,sentFrom})=>{
         const userToSend = getUserToSend(friendId);
-        if(userToSend === undefined){
-            io.to(socket.id).emit('messageReceivedOffline',{message});
+        if(userToSend !== undefined){
+            io.to(userToSend.socketId).emit('messageReceived',{message,sentFrom});
         }else{
-            io.to(userToSend.socketId).emit('messageReceived',{message});
+            io.to(socket.id).emit('messageReceivedOffline');
         }
     })
 
-    
+    socket.on('agregarAmigo',({friend,userToSend}) => {
+        const userToSendSocket = getUserToSend(userToSend);
+        if(userToSendSocket !== undefined){
+            console.log('Agregando amigo',userToSend);
+            io.to(userToSendSocket.socketId).emit('teAgregaron',{friend});
+        }
+    })
+
+    socket.on('disconnect',()=>{
+        console.log('User disconnected');
+        connectedUsers = connectedUsers.filter(user => user.socketId !== socket.id);
+    });
 })
 //Socket.Io Connection//
 

@@ -81,7 +81,8 @@ export class AuthService {
     this.usuario = {
       username: resp.username!,
       email: resp.email,
-      userId: resp.userId!
+      userId: resp.userId!,
+      newMsgA: resp.newMsgA!
     }
   }
 

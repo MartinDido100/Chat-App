@@ -1,9 +1,10 @@
 .simple-chat{
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 90vh;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
 
     & .text-bar{
         width: 100%;
@@ -47,50 +48,40 @@
         color: #999db4;
     }
 
-    .simple-chat-cont{
+    
+    & .messages_ul{
         width: 100%;
-        height: 100%;
-        border-radius: 10px;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+        overflow-y: scroll;
+        gap: 2em;
         padding: 2em 2.5em;
+        &::-webkit-scrollbar{
+            display: none;
+        }
+    }
+
+    & .msg_li{
+        display: flex;
+        justify-content: space-between;
+        width: 300px;
+        background: var(--primary);
+        padding: 1em;
+        border-radius: 10px;
+        color: #eee;
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;
         -ms-border-radius: 10px;
         -o-border-radius: 10px;
-    
-    
-        & .messages_ul{
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 2em;
-        }
-    
-        & .msg_li{
-            display: flex;
-            justify-content: space-between;
-            width: 300px;
-            background: var(--primary);
-            padding: 1em;
-            border-radius: 10px;
-            color: #eee;
-            -webkit-border-radius: 10px;
-            -moz-border-radius: 10px;
-            -ms-border-radius: 10px;
-            -o-border-radius: 10px;
-        }
-    
-        & .msg_sent{
-            align-self: flex-end;
-        }
-    
-        & .msg_recieved{
-            background: var(--secondary);
-        }
     }
-    
+
+    & .msg_sent{
+        align-self: flex-end;
+    }
+
+    & .msg_recieved{
+        background: var(--secondary);
+    }
 }
 
 

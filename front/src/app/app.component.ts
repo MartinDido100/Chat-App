@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
+import { Socket } from 'ngx-socket-io';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -10,7 +11,7 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit{
   
-  constructor(private router: Router, private titleService: Title){}
+  constructor(private router: Router, private titleService: Title,private socket : Socket){}
 
   ngOnInit(): void {
     this.router.events.pipe(

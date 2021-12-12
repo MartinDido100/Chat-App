@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
-import { UserSearched } from '../../interfaces/chat.interfaces';
 import { AuthService } from '../../../auth/services/auth.service';
 import { Usuario } from '../../../auth/interfaces/auth.interfaces';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-search',
@@ -12,10 +12,11 @@ import { Usuario } from '../../../auth/interfaces/auth.interfaces';
 export class SearchComponent {
 
   busqueda: string = '';
-  suggestions: UserSearched[] = [];
+  suggestions: Usuario[] = [];
   noResults: boolean = false;
   constructor(private cS: ChatService,
-              private aS: AuthService) { }
+              private aS: AuthService,
+              private socket: Socket) { }
 
 
   get user(): Usuario{
@@ -30,15 +31,16 @@ export class SearchComponent {
     return this.friends.findIndex(friend => friend.username === username) === -1;
   }
 
-  getLiClass(suggestion: UserSearched){
+  getLiClass(suggestion: Usuario){
       return suggestion.username === this.user.username ? 'disabled' : 'suggestions_li';
   }
 
-  addFriend(suggestion: UserSearched){
+  addFriend(suggestion: Usuario){
     this.cS.addFriend(this.user.userId, suggestion).subscribe(); //TODO: Agregar cartel de confirmación
+    this.socket.emit('agregarAmigo',{friend: this.user, userToSend: suggestion.userId});
   }
 
-  deleteFriend(suggestion: UserSearched){
+  deleteFriend(suggestion: Usuario){
     this.cS.deleteFriend(this.user.userId, suggestion).subscribe(); //TODO: Agregar cartel de confirmación
   }
 

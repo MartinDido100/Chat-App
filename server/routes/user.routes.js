@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getUser,getFriends,addFriend,deleteFriend,getUsersList } = require('../controllers/user.controllers');
+const { getUser,getFriends,addFriend,deleteFriend,getUsersList,updateNewMsgA, resetNewMsgA } = require('../controllers/user.controllers');
 
 const router = Router();
 
@@ -20,6 +20,10 @@ router.put('/addFriend',addFriend);
 //Eliminar amigo
 router.put('/deleteFriend',deleteFriend);
 
+//Actualizar nuevo mensaje cuando esta offline
+router.put('/updateNewMsgA',updateNewMsgA);
 
+//Resetear nuevo mensaje cuando esta offline
+router.put('/resetNewMsgA',resetNewMsgA);
 
 module.exports = router
