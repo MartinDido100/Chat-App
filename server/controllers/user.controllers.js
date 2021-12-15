@@ -109,21 +109,28 @@ const addFriend = async (req, res = response) => {
 
     try {
         
-        const friend = await Usuario.findOne({username: friendUsername});
+        const updatedFriend = await Usuario.findOneAndUpdate({username: friendUsername},{
+            $addToSet: {
+                friends: userId,
+                newMsgA: {
+                    friend: userId,
+                    numberOfMsgs: 0
+                }
+            }
+        },{new:true});
 
-        if(!friend){
+        if(!updatedFriend){
             return res.status(404).json({
                 ok: false,
                 msg:'Amigo no encontrado'
             })
         }
 
-
         const dbUser = await Usuario.findByIdAndUpdate(userId,{
             $addToSet: {
-                friends: friend._id,
+                friends: updatedFriend._id,
                 newMsgA: {
-                    friend: friend._id,
+                    friend: updatedFriend._id,
                     numberOfMsgs: 0
                 }
             }
@@ -136,21 +143,11 @@ const addFriend = async (req, res = response) => {
             })
         }
 
-        await friend.updateOne({
-            $addToSet:{
-                friends: dbUser._id,
-                newMsgA: {
-                    friend: dbUser._id,
-                    numberOfMsgs: 0
-                }
-            }
-        })
-
         const friendsArray = dbUser.friends.map( friend => {
             return {
                 userId: friend._id,
                 username: friend.username,
-                newMsgA: friend.newMsgA
+                newMsgA: updatedFriend.newMsgA
             }
         })
 
@@ -304,7 +301,7 @@ const deleteFriend = async (req,res = response) => {
             $pull:{
                 friends: dbUser._id,
                 newMsgA: {
-                    friend: friend._id
+                    friend: userId
                 }
             }
         })

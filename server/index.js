@@ -37,7 +37,7 @@ const server = http.Server(app);
 
 const io = require('socket.io')(server,{//Inicio el socket
     cors:{
-        origins: ['http://localhost:4200'],
+        origins: '*',
     }
 });
 
@@ -73,6 +73,14 @@ io.on('connection',(socket)=> {
             io.to(userToSendSocket.socketId).emit('teAgregaron',{friend});
         }
     })
+
+    socket.on('eliminarAmigo',({friend,userToSend}) => {
+        const userToSendSocket = getUserToSend(userToSend);
+        if(userToSendSocket !== undefined){
+            console.log('Eliminando amigo',userToSend);
+            io.to(userToSendSocket.socketId).emit('teEliminaron',{friend});
+        }
+    }) 
 
     socket.on('disconnect',()=>{
         console.log('User disconnected');
