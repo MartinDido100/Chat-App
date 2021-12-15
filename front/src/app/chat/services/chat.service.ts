@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { ChatResponse, UserSearchResponse, AddMsgResponse, ChatMessage, NuevosMsg } from '../interfaces/chat.interfaces';
 import { Usuario } from 'src/app/auth/interfaces/auth.interfaces';
 import { AuthResponse } from '../../auth/interfaces/auth.interfaces';
@@ -36,7 +36,7 @@ export class ChatService {
     return [...this.nuevosMsg];
   }
 
-  logout(){
+  resetArrays(){
     this.friendsArray = [];
     this.lastMsgsArray = [];
     this.nuevosMsg = [];
@@ -140,12 +140,34 @@ export class ChatService {
           return resp.usuarios;
         }
         return [];
-      })
+      }),
+      catchError(_ => [])
     );
   }
 
+  deleteFriendA(friend: Usuario){
+    const index = this.friendsArray.findIndex(fr => fr.userId === friend.userId);
+    if(index != -1){
+      this.friendsArray.splice(index,1);
+    }
+    const newMsgIndex = this.nuevosMsg.findIndex(msg => msg.friend === friend.userId);
+    if(newMsgIndex != -1){
+      this.nuevosMsg.splice(newMsgIndex,1);
+    }
+
+    const lastMsgIndex = this.lastMsgsArray.findIndex(msg => msg.friend === friend.userId);
+    if(lastMsgIndex != -1){
+      this.lastMsgsArray.splice(lastMsgIndex,1);
+    }
+  }
+
   updateFriends(friend: Usuario){
-    this.friendsArray.push(friend);
+
+    const yaEsta = this.friendsArray.some(fr => fr.userId === friend.userId)
+    
+    if(!yaEsta){
+      this.friendsArray.push(friend);
+    }
     this.nuevosMsg.push({
       friend: friend.userId,
       nuevosMsg: 0
@@ -176,6 +198,14 @@ export class ChatService {
       tap(resp => {
         if(resp.ok){
           this.friendsArray = resp.friends!;
+
+          if(resp.friends!.length === 0){
+            this.nuevosMsg = [];
+          }
+
+          resp.friends!.forEach(friend => {
+            this.cargarNewMsg(friend,userId);
+          })
         }
       })
     );
@@ -201,6 +231,9 @@ export class ChatService {
       tap(resp => {
         if(resp.ok){
           this.friendsArray = resp.friends!;
+          resp.friends!.forEach(friend => {
+            this.cargarNewMsg(friend,userId);
+          })
         }
       })
     );

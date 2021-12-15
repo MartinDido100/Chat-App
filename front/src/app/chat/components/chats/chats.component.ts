@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/auth/interfaces/auth.interfaces';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ChatService } from '../../services/chat.service';
@@ -37,6 +37,7 @@ export class ChatsComponent implements OnInit {
     this.clickedFriend = friend;
     this.chatActivo = friend.username;
     const index = friend.newMsgA!.findIndex(f => f.friend === this.user.userId);
+
     if(friend.newMsgA![index].numberOfMsgs > 0){
       this.chS.resetNewMsgOffline(friend.userId,this.user.userId).subscribe();
     }
@@ -66,9 +67,25 @@ export class ChatsComponent implements OnInit {
   constructor(private aS: AuthService,private chS:ChatService,private socket: Socket) {}
 
   ngOnInit(): void {
+    this.socket.removeListener('teEliminaron');
+    this.socket.removeListener('teAgregaron');
+    this.socket.removeListener('messageReceived');
+
     this.socket.on('teAgregaron',(data: TeAgregaron) => {
       this.chS.updateFriends(data.friend);
     })
+
+    this.socket.on('teEliminaron',(data: TeAgregaron) => {
+      this.chS.deleteFriendA(data.friend);
+      if(data.friend.userId === this.clickedFriend.userId){
+        this.clickedFriend = {
+          username: '',
+          userId: ''
+        }
+        this.chatActivo = '';
+      }
+    })
+
     this.socket.on('messageReceived',(data: MessageFromSocket)=> {
       if(data.sentFrom !== this.clickedFriend.userId){
         this.chS.updateLastMsg(data.sentFrom,data.message);

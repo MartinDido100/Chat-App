@@ -42,6 +42,7 @@ export class SearchComponent {
 
   deleteFriend(suggestion: Usuario){
     this.cS.deleteFriend(this.user.userId, suggestion).subscribe(); //TODO: Agregar cartel de confirmación
+    this.socket.emit('eliminarAmigo',{friend: this.user, userToSend: suggestion.userId});
   }
 
   buscar(){

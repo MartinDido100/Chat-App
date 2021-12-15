@@ -1,5 +1,5 @@
 .chats-cont {
-    height: 97vh;
+    height: 100%;
     display: grid;
     grid-template-columns: 23% 1fr;
     column-gap: 2em;
@@ -12,12 +12,26 @@
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
     -o-border-radius: 10px;
+    @media screen and (max-width: 1165px){
+        grid-template-columns: 1fr;
+        grid-template-rows: 5em 1fr;
+    }
+
 
     & .chat-select{
-        min-width: 15em;
+        width: 100%;
         display: flex;
         gap: 1em;
         flex-direction: column;
+
+        @media screen and (max-width: 1165px){
+            flex-direction: row;
+            overflow-x: scroll;
+
+            &::-webkit-scrollbar{
+                display: none;
+            }
+        }
     }
 
     & .chat{
@@ -34,6 +48,9 @@
         -moz-border-radius: 10px;
         -ms-border-radius: 10px;
         -o-border-radius: 10px;
+        @media screen and (max-width: 1165px){
+            width: 15em;
+        }
     }
 
     .chat-latest-message{
@@ -63,12 +80,4 @@
     & .active-chat{
         background: var(--primary);
     }
-
-
-    // app-chat-simple{
-    //     overflow-y: scroll;
-    //     &::-webkit-scrollbar{
-    //         display: none;
-    //     }
-    // }
 }

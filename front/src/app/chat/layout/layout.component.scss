@@ -23,7 +23,9 @@
         -ms-border-radius: 10px;
         -o-border-radius: 10px;
         @media screen and (max-width: 845px) {
-            gap: 4.6em;
+            gap: 0;
+            justify-content: space-between;
+            padding: 0 5%;
             flex-direction: row;
             width: 100%;
         }

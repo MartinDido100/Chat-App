@@ -100,8 +100,8 @@
     }
 
     & .form-container{
-        padding: 2em 1em;
         display: flex;
+        padding: 0 2em;
         align-items: center;
         justify-content: center;
         flex-direction: column;
@@ -140,10 +140,19 @@
     & .qs-cont{
         margin-top: 2em;
     }
+
+    & .qs{
+        font-size: clamp(.7em,4vw,1em);
+    }
+
     & .link{
         color: #0074cc;
         &:hover{
             text-decoration-line: underline;
+        }
+
+        & a{
+            font-size: clamp(.7em,4vw,1em);
         }
     }
 }

@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import { filter } from 'rxjs/operators';
+import { ChatService } from './chat/services/chat.service';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +12,10 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit{
   
-  constructor(private router: Router, private titleService: Title,private socket : Socket){}
+  constructor(private router: Router, private titleService: Title,private socket : Socket,private cS: ChatService){}
 
   ngOnInit(): void {
+    this.cS.resetArrays();
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd)
     ).subscribe(() => {

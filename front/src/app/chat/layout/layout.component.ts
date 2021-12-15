@@ -7,6 +7,10 @@ import { ChatService } from '../services/chat.service';
 import { Socket } from 'ngx-socket-io';
 import { Usuario } from '../../auth/interfaces/auth.interfaces';
 
+interface TeAgregaron{
+  friend: Usuario;
+}
+
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
@@ -41,7 +45,7 @@ export class LayoutComponent implements OnInit {
         this.gS.signOut(false);
       }
     })
-    this.chS.logout();
+    this.chS.resetArrays();
     this.cS.delete('token');
     this.cS.deleteAll('/');
     this.router.navigateByUrl('/auth/login');

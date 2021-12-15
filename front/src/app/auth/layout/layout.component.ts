@@ -24,7 +24,7 @@ export class LayoutComponent implements OnInit {
     private router: Router,
     private cS: CookieService,
     private aS: AuthService,
-    private gL: GoogleLoadingService
+    private gL: GoogleLoadingService,
   ) {
     router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
