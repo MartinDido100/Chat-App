@@ -5,10 +5,8 @@
       (click)="chargeClickedFriend(friend)"
       *ngFor="let friend of userFriends; let i = index"
     >
-      <div class="texts">
-        <p class="chat-name">{{ friend.username }}</p>
-        <p class="chat-latest-message">{{lastMsg[i]?.message || 'Aun no hay mensajes...'}}</p>
-      </div>
+      <p class="chat-name">{{ friend.username }}</p>
+      <p class="chat-latest-message">{{lastMsg[i]?.message || 'Aun no hay mensajes...'}}</p>
       <div class="chat-messages-number" *ngIf="nuevosMsg[i].nuevosMsg > 0">{{ nuevosMsg[i].nuevosMsg }}</div>
     </div>
   </div>

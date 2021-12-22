@@ -18,6 +18,6 @@
         <div class="error-cont" *ngIf="loginError"><p class="error-msg">{{loginError}}</p></div>
     </div>
 
-    <button type="submit" #button [class.trans]="googleLoading"> <div class="spinner" *ngIf="cargando || googleLoading"></div> Login </button>
+    <button type="submit" [class.trans]="googleLoading || cargando"> <div class="spinner" *ngIf="cargando || googleLoading"></div> Login </button>
 
 </form>

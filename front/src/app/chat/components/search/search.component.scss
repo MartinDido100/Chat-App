@@ -1,5 +1,6 @@
 .search_title{
-    font-size: clamp(.3em,5vw,2em);
+    font-size: clamp(.8em,3.7vw,2em);
+    white-space: nowrap;
     color: #eee;
 }
 
@@ -10,7 +11,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 3em;
+    gap: 2em;
 
     & .searchbar{
         width: 90%;

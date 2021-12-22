@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { AuthResponse, Usuario } from '../interfaces/auth.interfaces';
 import { catchError, map, tap } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { GoogleLoginProvider, SocialAuthService, SocialUser } from 'angularx-social-login';
 
 @Injectable({

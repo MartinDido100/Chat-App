@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/auth/interfaces/auth.interfaces';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ChatService } from '../../services/chat.service';

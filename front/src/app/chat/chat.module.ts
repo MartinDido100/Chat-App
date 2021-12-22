@@ -9,6 +9,7 @@ import { ChatSimpleComponent } from './components/chat-simple/chat-simple.compon
 import { SearchComponent } from './components/search/search.component';
 import { TimePipe } from './pipes/time.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MyDatePipe } from './pipes/my-date.pipe';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PerfilComponent,
     ChatSimpleComponent,
     SearchComponent,
-    TimePipe
+    TimePipe,
+    MyDatePipe
   ],
   imports: [
     CommonModule,

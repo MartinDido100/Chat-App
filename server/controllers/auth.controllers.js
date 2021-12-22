@@ -87,6 +87,9 @@ const googleLogin = async (req,res=response) => {
 
             const token = await generarJwt(newUser._id,username);
 
+            const salt = bcrypt.genSaltSync(10);
+            newUser.password = bcrypt.hashSync(password,salt);
+
             await newUser.save();
 
             return res.status(200).json({

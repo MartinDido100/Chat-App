@@ -8,8 +8,6 @@
 
     & .text-bar{
         width: 100%;
-        padding-left: 2.5em;
-
         & form{
             display: flex;
             gap: .5em;
@@ -17,6 +15,7 @@
         }
 
         & .text-input{
+            flex-grow: 1;
             border: 2px solid #222;
             width: 92%;
             padding: .8em .8em;
@@ -44,27 +43,38 @@
     }
 
     & .time{
-        font-size: .7rem;
+        display: flex;
+        flex-direction: column;
         color: #999db4;
+        @media screen and (max-width: 400px){
+            flex-direction: row;
+            gap: .8em;
+        }
     }
 
-    
+    & span{
+        font-size: .8rem;
+    }
+
     & .messages_ul{
         width: 100%;
         display: flex;
         flex-direction: column;
         overflow-y: scroll;
         gap: 2em;
-        padding: 2em 2.5em;
+        padding-bottom: 1em;
         &::-webkit-scrollbar{
             display: none;
         }
     }
 
     & .msg_li{
+        align-items: center;
         display: flex;
+        gap: 1.5em;
         justify-content: space-between;
-        width: 300px;
+        width: 70%;
+        max-width: 300px;
         background: var(--primary);
         padding: 1em;
         border-radius: 10px;
@@ -73,6 +83,15 @@
         -moz-border-radius: 10px;
         -ms-border-radius: 10px;
         -o-border-radius: 10px;
+        @media screen and (max-width: 400px){
+            align-items: flex-start;
+            flex-direction: column;
+            gap: .8em;
+        }
+    }
+
+    & .message{
+        overflow-wrap: anywhere;  
     }
 
     & .msg_sent{
@@ -88,7 +107,7 @@
 .bg-spinner{
     position: absolute;
     top: 0;
-    left: 2.3em;
+    left: 0em;
     width: 95%;
     height: 93%;
     background: #00000028;
@@ -102,7 +121,7 @@
 
 .spinner {
     position: absolute;
-    left: 2.3em;
+    left: 0em;
     right: 0;
     top: 0;
     bottom: 0;

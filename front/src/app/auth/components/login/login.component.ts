@@ -1,12 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -19,7 +12,6 @@ import { GoogleLoadingService } from '../../services/google-loading.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('button') button!: ElementRef;
 
   viewPass: boolean = false;
   loginError: string = '';
@@ -36,7 +28,6 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private aS: AuthService,
     private vS: ValidationsService,
-    private renderer: Renderer2,
     private gL : GoogleLoadingService
   ) {}
 
@@ -66,7 +57,6 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.renderer.setStyle(this.button.nativeElement, 'color', 'transparent');
     this.cargando = true;
 
     const { username, password } = this.loginForm.value;
@@ -78,7 +68,6 @@ export class LoginComponent implements OnInit {
         }
       },
       (error: HttpErrorResponse) => {
-        this.renderer.setStyle(this.button.nativeElement, 'color', '#eee');
         this.loginError = error.error.msg;
         this.cargando = false;
       }

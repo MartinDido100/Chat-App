@@ -1,6 +1,6 @@
 <div class="simple-chat">
     <ul class="messages_ul" #chatBox>
-        <li *ngFor="let message of conversation" [class]="getMsgType(message.enviadoPor)">{{ message.contenido }} <span class="time">{{ message.updatedAt | time }}</span></li>
+        <li *ngFor="let message of conversation" [class]="getMsgType(message.enviadoPor)"> <p class="message">{{ message.contenido }}</p> <span class="time"><span class="date">{{ message.updatedAt | myDate }}</span><span class="hour">{{ message.updatedAt | time }}</span></span></li>
     </ul>
     
     <div class="text-bar">
