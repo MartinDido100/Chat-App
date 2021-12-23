@@ -99,7 +99,7 @@ const googleLogin = async (req,res=response) => {
 
         }
 
-        const token = await generarJwt(existingUser._id,username);
+        const token = await generarJwt(existingUser._id,existingUser.username);
 
         return res.status(200).json({
             ok: true,

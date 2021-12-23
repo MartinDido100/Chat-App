@@ -18,12 +18,19 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 
+app.use(express.static(path.join(__dirname,'public')));
+
 dbConfig();
 
 app.use('/api/auth',authRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/chat',chatRoutes);
 app.use('/api/msg',msgRoutes);
+
+
+app.get("*",(req,res)=> {
+    res.sendFile(path.join(__dirname,"public/index.html"));
+})
 
 //Socket.Io Connection//
 
@@ -42,9 +49,7 @@ const io = require('socket.io')(server,{//Inicio el socket
 });
 
 io.on('connection',(socket)=> {
-    console.log('User conected',socket.id);
     socket.on('login',({username,userId}) => {
-        console.log('User logged',username);
         connectedUsers.push({
             username,
             userId,
@@ -53,7 +58,6 @@ io.on('connection',(socket)=> {
     });
 
     socket.on('logout',({userToLogout})=>{
-        console.log('User unlogged',userToLogout.username);
         connectedUsers = connectedUsers.filter(user => user.userId !== userToLogout.userId);
     });
 
@@ -69,7 +73,6 @@ io.on('connection',(socket)=> {
     socket.on('agregarAmigo',({friend,userToSend}) => {
         const userToSendSocket = getUserToSend(userToSend);
         if(userToSendSocket !== undefined){
-            console.log('Agregando amigo',userToSend);
             io.to(userToSendSocket.socketId).emit('teAgregaron',{friend});
         }
     })
@@ -77,13 +80,11 @@ io.on('connection',(socket)=> {
     socket.on('eliminarAmigo',({friend,userToSend}) => {
         const userToSendSocket = getUserToSend(userToSend);
         if(userToSendSocket !== undefined){
-            console.log('Eliminando amigo',userToSend);
             io.to(userToSendSocket.socketId).emit('teEliminaron',{friend});
         }
     }) 
 
     socket.on('disconnect',()=>{
-        console.log('User disconnected');
         connectedUsers = connectedUsers.filter(user => user.socketId !== socket.id);
     });
 })
@@ -92,10 +93,10 @@ io.on('connection',(socket)=> {
 
 
 
-server.listen(PORT, () => {
-    console.log(`>> Socket listo y escuchando por el puerto: ${PORT}`)
+server.listen(process.env.PORT, () => {
+    console.log(`>> Socket listo y escuchando por el puerto: ${process.env.PORT}`)
 });
 
-app.listen(3000,()=>{
+app.listen(process.env.API_PORT,()=>{
 console.log(`Servidor iniciado en ${process.env.API_PORT}`);
 })

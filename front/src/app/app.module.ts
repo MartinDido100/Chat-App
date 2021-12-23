@@ -10,7 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
 
-const config: SocketIoConfig = { url: 'http://localhost:5000',options:{}};
+const config: SocketIoConfig = { url: environment.socketUrl, options:{}};
 
 @NgModule({
   declarations: [

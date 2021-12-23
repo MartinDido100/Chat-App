@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   baseUrl: 'http://localhost:3000/api',
-  googleKey: '933510400902-j785qkovvdfi90pidcisfjkf1pbt845i.apps.googleusercontent.com'
+  googleKey: '933510400902-j785qkovvdfi90pidcisfjkf1pbt845i.apps.googleusercontent.com',
+  socketUrl: 'http://localhost:3000'
 };
 /*
  * For easier debugging in development mode, you can import the following file
