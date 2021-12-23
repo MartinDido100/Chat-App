@@ -8,14 +8,14 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Install Angular Packages
 
-Run npm install.
+Run `npm install`.
 
 # Server folder
 
 ## Install Packages
 
-Run npm install.
+Run `npm install`.
 
 ## Start server in development mode
 
-Run npm run dev.
+Run `npm run dev`.
