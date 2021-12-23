@@ -18,4 +18,4 @@ Run `npm install`.
 
 ## Start server in development mode
 
-Run `npm run dev`.
+Run `npm run dev`. Server is on `http://localhost:5000/`
